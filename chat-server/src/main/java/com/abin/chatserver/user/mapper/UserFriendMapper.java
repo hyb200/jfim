@@ -1,5 +1,6 @@
 package com.abin.chatserver.user.mapper;
 
+import com.abin.chatserver.user.domain.entity.UserFriend;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
