@@ -25,8 +25,8 @@ import org.springframework.context.annotation.Configuration;
 public class NettyWebSocketServer {
     public static final int WEB_SOCKET_PORT = 10086;
 
-    private EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-    private EventLoopGroup workerGroup = new NioEventLoopGroup(NettyRuntime.availableProcessors());
+    private final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+    private final EventLoopGroup workerGroup = new NioEventLoopGroup(NettyRuntime.availableProcessors());
 
     /**
      * 优雅停机

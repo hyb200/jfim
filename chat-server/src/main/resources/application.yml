@@ -1,6 +1,27 @@
 spring:
   application:
     name: chat-server
-
   profiles:
     active: test
+  datasource:
+    url: jdbc:mysql://${mysql.ip}:${mysql.port}/${mysql.db}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: ${mysql.username}
+    password: ${mysql.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+logging:
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd hh:mm:ss.SSS}){faint}
+              %clr(%-5level)
+              %clr(${PID:- }){magenta}
+              %clr([%t]){faint}
+              %clr(%-40.40logger{39}){cyan}
+              %clr(:) %msg%n)"
