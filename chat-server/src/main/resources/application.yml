@@ -19,6 +19,10 @@ spring:
       timeout: 1800000
       # 设置密码
       password: ${jfim.redis.password}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 
 knife4j:
   enable: true

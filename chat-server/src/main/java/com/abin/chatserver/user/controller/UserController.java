@@ -36,9 +36,4 @@ public class UserController {
         accountService.register(account, password, confirmPassword);
         return BaseResponse.success();
     }
-
-    @GetMapping("/hello")
-    public BaseResponse<String> hello() {
-        return BaseResponse.success("hello, this is spring security");
-    }
 }
