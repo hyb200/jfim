@@ -2,6 +2,7 @@ package com.abin.chatserver.user.mapper;
 
 import com.abin.chatserver.user.domain.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author Yibin Huang
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2024-07-08 15:45:50
 * @Entity com.abin.chatserver.user.domain.entity.User
 */
+@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
 }

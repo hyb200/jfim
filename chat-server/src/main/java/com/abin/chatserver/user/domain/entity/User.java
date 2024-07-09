@@ -3,30 +3,42 @@ package com.abin.chatserver.user.domain.entity;
 import java.io.Serial;
 import java.io.Serializable;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import com.baomidou.mybatisplus.annotation.TableName;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
 * 用户表
 */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = false)
 @TableName("user")
 @Schema(name = "User对象", description = "用户表")
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
 
     @Schema(description = "用户ID")
+    @TableId(type = IdType.AUTO)
     private Long uid;
 
-    @Schema(description = "用户昵称")
-    private String name;
+    @Schema(description = "账号")
+    private String username;
 
     @Schema(description = "密码")
     private String password;
+
+    @Schema(description = "用户昵称")
+    private String nickname;
 
     @Schema(description = "用户头像")
     private String avatar;
@@ -45,4 +57,9 @@ public class User implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
 }

@@ -1,6 +1,6 @@
 package com.abin.chatserver.common.domain.vo.response;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,21 +19,18 @@ public class WSMemberChange {
 
     public static final Integer CHANGE_TYPE_REMOVE = 2;
 
-    @ApiModelProperty("群组id")
+    @Schema(name = "群组id")
     private Long roomId;
 
-    @ApiModelProperty("变动uid集合")
+    @Schema(name = "变动uid集合")
     private Long uid;
 
-    @ApiModelProperty("变动类型 1加入群组 2移除群组")
+    @Schema(name = "变动类型 1加入群组 2移除群组")
     private Integer changeType;
 
-    /**
-     * @see com.abin.chatserver.commom.domain.enums.ChatActiveStatusEnum
-     */
-    @ApiModelProperty("在线状态 1在线 2离线")
+    @Schema(name = "在线状态 1在线 2离线")
     private Integer activeStatus;
 
-    @ApiModelProperty("最后一次上下线时间")
+    @Schema(name = "最后一次上下线时间")
     private Date lastOptTime;
 }

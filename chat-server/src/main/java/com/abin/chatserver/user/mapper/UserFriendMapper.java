@@ -2,6 +2,7 @@ package com.abin.chatserver.user.mapper;
 
 import com.abin.chatserver.user.domain.entity.UserFriend;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author Yibin Huang
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2024-07-08 15:45:44
 * @Entity com.abin.chatserver.user.domain.entity.UserFriend
 */
+@Mapper
 public interface UserFriendMapper extends BaseMapper<UserFriend> {
 
 }
