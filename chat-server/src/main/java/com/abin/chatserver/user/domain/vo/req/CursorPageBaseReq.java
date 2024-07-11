@@ -1,4 +1,4 @@
-package com.abin.chatserver.common.domain.vo.request;
+package com.abin.chatserver.user.domain.vo.req;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonIgnore;

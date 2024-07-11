@@ -1,6 +1,5 @@
 package com.abin.chatserver.user.controller;
 
-import cn.hutool.core.util.ReUtil;
 import com.abin.chatserver.common.domain.vo.BaseResponse;
 import com.abin.chatserver.user.domain.vo.req.LoginReq;
 import com.abin.chatserver.user.domain.vo.req.RegisterReq;

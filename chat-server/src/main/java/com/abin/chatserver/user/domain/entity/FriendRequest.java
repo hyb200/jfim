@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -14,6 +15,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 * 好友申请表
 */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = false)
 @TableName("friend_request")
 @Schema(name = "FriendRequest对象", description = "好友申请表")

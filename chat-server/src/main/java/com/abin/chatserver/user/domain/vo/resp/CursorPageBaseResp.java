@@ -1,9 +1,10 @@
-package com.abin.chatserver.common.domain.vo.response;
+package com.abin.chatserver.user.domain.vo.resp;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CursorPageBaseResp<T> {
 
     @Schema(description = "游标（下次翻页带上这参数）")
@@ -25,11 +27,11 @@ public class CursorPageBaseResp<T> {
     private List<T> list;
 
     public static <T> CursorPageBaseResp<T> init(CursorPageBaseResp cursorPage, List<T> list) {
-        CursorPageBaseResp<T> cursorPageBaseResp = new CursorPageBaseResp<T>();
-        cursorPageBaseResp.setIsLast(cursorPage.getIsLast());
-        cursorPageBaseResp.setList(list);
-        cursorPageBaseResp.setCursor(cursorPage.getCursor());
-        return cursorPageBaseResp;
+        return CursorPageBaseResp.<T>builder()
+                .isLast(cursorPage.getIsLast())
+                .list(list)
+                .cursor(cursorPage.getCursor())
+                .build();
     }
 
     @JsonIgnore
@@ -38,10 +40,9 @@ public class CursorPageBaseResp<T> {
     }
 
     public static <T> CursorPageBaseResp<T> empty() {
-        CursorPageBaseResp<T> cursorPageBaseResp = new CursorPageBaseResp<T>();
-        cursorPageBaseResp.setIsLast(true);
-        cursorPageBaseResp.setList(new ArrayList<T>());
-        return cursorPageBaseResp;
+        return CursorPageBaseResp.<T>builder()
+                .isLast(true)
+                .list(new ArrayList<>())
+                .build();
     }
-
 }

@@ -1,4 +1,4 @@
-package com.abin.chatserver.common.domain.vo.response;
+package com.abin.chatserver.user.domain.vo.resp;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.v3.oas.annotations.media.Schema;
