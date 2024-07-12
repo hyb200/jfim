@@ -1,13 +1,18 @@
 package com.abin.chatserver.user.controller;
 
+import com.abin.chatserver.common.annotation.RedissonLock;
 import com.abin.chatserver.common.domain.vo.BaseResponse;
+import com.abin.chatserver.user.domain.entity.User;
 import com.abin.chatserver.user.domain.vo.req.LoginReq;
+import com.abin.chatserver.user.domain.vo.req.ModifyNameReq;
 import com.abin.chatserver.user.domain.vo.req.RegisterReq;
 import com.abin.chatserver.user.domain.vo.resp.AuthenticateResp;
 import com.abin.chatserver.user.service.AccountService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,6 +38,14 @@ public class UserController {
         String password = registerReq.getPassword();
         String confirmPassword = registerReq.getConfirmPassword();
         accountService.register(account, password, confirmPassword);
+        return BaseResponse.success();
+    }
+
+    @PutMapping("/name")
+    @Operation(description = "更改用户名")
+    public BaseResponse<Void> modifyName(@Valid @RequestBody ModifyNameReq req) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        accountService.modifyName(user.getUid(), req);
         return BaseResponse.success();
     }
 }

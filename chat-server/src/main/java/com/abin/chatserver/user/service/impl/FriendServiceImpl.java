@@ -1,5 +1,7 @@
 package com.abin.chatserver.user.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import com.abin.chatserver.common.annotation.RedissonLock;
 import com.abin.chatserver.common.exception.BusinessException;
 import com.abin.chatserver.user.dao.FriendRequestDao;
 import com.abin.chatserver.user.dao.UserFriendDao;
@@ -15,6 +17,7 @@ import com.abin.chatserver.user.domain.vo.resp.CursorPageBaseResp;
 import com.abin.chatserver.user.domain.vo.resp.FriendCheckResp;
 import com.abin.chatserver.user.domain.vo.resp.UserInfoResp;
 import com.abin.chatserver.user.service.FriendService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class FriendServiceImpl implements FriendService {
 
@@ -34,12 +38,6 @@ public class FriendServiceImpl implements FriendService {
     @Autowired
     private FriendRequestDao friendRequestDao;
 
-    /**
-     * 检查是否是自己的好友
-     * @param uid
-     * @param friendCheckReq
-     * @return
-     */
     @Override
     public FriendCheckResp check(Long uid, FriendCheckReq friendCheckReq) {
         List<UserFriend> allFriends = userFriendDao.getAllFriends(uid, friendCheckReq.getUids());
@@ -54,6 +52,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
+    @RedissonLock(key = "#uid")
     public void doFriendRequest(Long uid, FriendRequestReq req) {
         Long targetUid = req.getTargetUid();
         String message = req.getMessage();
@@ -96,9 +95,15 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @RedissonLock(key = "#uid")
     public void agreeRequest(Long uid, AgreeRequestReq req) {
         Long applyId = req.getApplyId();
         FriendRequest friendRequest = friendRequestDao.getById(applyId);
+
+        if (Objects.isNull(friendRequest)) {
+            throw new BusinessException("该申请记录不存在");
+        }
+
         //  同意申请
         friendRequestDao.agree(applyId);
         //  创建好友关系
@@ -106,6 +111,18 @@ public class FriendServiceImpl implements FriendService {
         //  todo 创建新会话，发送消息
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteFriend(Long uid, Long targetUid) {
+        List<UserFriend> relations = userFriendDao.getUserFriend(uid, targetUid);
+        if (CollUtil.isEmpty(relations)) {
+            log.info("双方不是好友关系: {}, {}", uid, targetUid);
+            return;
+        }
+        List<Long> relationIds = relations.stream().map(UserFriend::getId).toList();
+        userFriendDao.removeByIds(relationIds);
+        //  todo 禁用会话
+    }
 
 
     @Override

@@ -7,6 +7,7 @@ import com.abin.chatserver.common.utils.JwtUtils;
 import com.abin.chatserver.user.dao.UserDao;
 import com.abin.chatserver.user.domain.entity.User;
 import com.abin.chatserver.user.domain.vo.req.LoginReq;
+import com.abin.chatserver.user.domain.vo.req.ModifyNameReq;
 import com.abin.chatserver.user.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,6 +39,12 @@ public class AccountServiceImpl implements AccountService {
                 .nickname("用户" + IdUtil.fastSimpleUUID().substring(0, 8))
                 .build();
         userDao.save(user);
+    }
+
+    @Override
+    public void modifyName(Long uid, ModifyNameReq req) {
+        String name = req.getName();
+        userDao.modifyName(uid, name);
     }
 
     @Override
