@@ -6,9 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
@@ -19,6 +17,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @Builder
 @TableName("user_friend")
 @Schema(name = "UserFriend对象", description = "用户好友表")
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserFriend implements Serializable {
 
     @Schema(description = "id")

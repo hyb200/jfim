@@ -14,7 +14,7 @@ public class PageBaseReq {
 
     @Schema(description = "页面大小")
     @Max(value = 50, message = "一页最多支持50条消息")
-    private Integer pageSize = 10;
+    private Integer pageSize = 50;
 
     /**
      * 获取 mybatis-plus 的 page

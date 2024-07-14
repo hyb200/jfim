@@ -4,19 +4,17 @@ import cn.hutool.core.collection.CollUtil;
 import com.abin.chatserver.common.annotation.RedissonLock;
 import com.abin.chatserver.common.exception.BusinessException;
 import com.abin.chatserver.user.dao.FriendRequestDao;
+import com.abin.chatserver.user.dao.UserDao;
 import com.abin.chatserver.user.dao.UserFriendDao;
 import com.abin.chatserver.user.domain.entity.FriendRequest;
+import com.abin.chatserver.user.domain.entity.User;
 import com.abin.chatserver.user.domain.entity.UserFriend;
 import com.abin.chatserver.user.domain.enums.ApplyStatusEnum;
 import com.abin.chatserver.user.domain.enums.ReadStatusEnum;
-import com.abin.chatserver.user.domain.vo.req.AgreeRequestReq;
-import com.abin.chatserver.user.domain.vo.req.CursorPageBaseReq;
-import com.abin.chatserver.user.domain.vo.req.FriendCheckReq;
-import com.abin.chatserver.user.domain.vo.req.FriendRequestReq;
-import com.abin.chatserver.user.domain.vo.resp.CursorPageBaseResp;
-import com.abin.chatserver.user.domain.vo.resp.FriendCheckResp;
-import com.abin.chatserver.user.domain.vo.resp.UserInfoResp;
+import com.abin.chatserver.user.domain.vo.req.*;
+import com.abin.chatserver.user.domain.vo.resp.*;
 import com.abin.chatserver.user.service.FriendService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +35,9 @@ public class FriendServiceImpl implements FriendService {
 
     @Autowired
     private FriendRequestDao friendRequestDao;
+
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public FriendCheckResp check(Long uid, FriendCheckReq friendCheckReq) {
@@ -124,12 +125,62 @@ public class FriendServiceImpl implements FriendService {
         //  todo 禁用会话
     }
 
+    @Override
+    public RequestUnreadResp unread(Long uid) {
+        Integer unread = friendRequestDao.getUnreadCount(uid);
+        return RequestUnreadResp.builder()
+                .unread(unread)
+                .build();
+    }
+
+    @Override
+    public PageBaseResp<FriendRequestResp> requestList(Long uid, PageBaseReq req) {
+        IPage<FriendRequest> page = friendRequestDao.getRequestPage(uid, req.plusPage());
+        if (CollUtil.isEmpty(page.getRecords())) {
+            return PageBaseResp.empty();
+        }
+        //  设置为已读状态
+        setRequestReadStatus(uid, page);
+
+        List<FriendRequestResp> requestRespList = page.getRecords().stream()
+                .map(friendRequest -> FriendRequestResp.builder()
+                        .id(friendRequest.getId())
+                        .uid(friendRequest.getUid())
+                        .msg(friendRequest.getMsg())
+                        .status(friendRequest.getStatus())
+                        .build())
+                .toList();
+        return PageBaseResp.init(page, requestRespList);
+    }
+
+    private void setRequestReadStatus(Long uid, IPage<FriendRequest> page) {
+        List<Long> ids = page.getRecords().stream()
+                .map(FriendRequest::getId)
+                .toList();
+        friendRequestDao.updateReadStatusByIds(uid, ids);
+    }
+
 
     @Override
     public CursorPageBaseResp<UserInfoResp> friendList(Long uid, CursorPageBaseReq cursorPageBaseReq) {
         CursorPageBaseResp<UserFriend> friendPage = userFriendDao.getFriendPage(uid, cursorPageBaseReq);
+        if (CollUtil.isEmpty(friendPage.getList())) {
+            return CursorPageBaseResp.empty();
+        }
+        List<Long> friendUids = friendPage.getList().stream()
+                .map(UserFriend::getFriendUid).collect(Collectors.toList());
+        List<User> friends = userDao.getFriendList(friendUids);
+        List<UserInfoResp> userInfoList = friends.stream()
+                .map(user -> UserInfoResp.builder().uid(user.getUid())
+                        .nickname(user.getNickname())
+                        .avatar(user.getAvatar())
+                        .build()).toList();
 
-        return null;
+        return CursorPageBaseResp.<UserInfoResp>builder()
+                .list(userInfoList)
+                .isLast(friendPage.getIsLast())
+                .cursor(friendPage.getCursor())
+                .build();
     }
 
     private void createFriend(Long uid, Long friendUid) {

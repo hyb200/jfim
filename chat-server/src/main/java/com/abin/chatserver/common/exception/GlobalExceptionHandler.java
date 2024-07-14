@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Throwable.class)
     public BaseResponse<?> defaultExceptionHandler(Throwable e) {
-        log.error("系统错误: {}", e.getMessage());
+        log.error("系统错误: {}", e);
         return BaseResponse.error(ErrorEnum.SYSTEM_ERROR);
     }
 

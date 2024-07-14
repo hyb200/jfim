@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.abin.chatserver.user.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
 * @author Yibin Huang
 * @description 针对表【user(用户表)】的数据库操作
@@ -21,6 +23,10 @@ public class UserDao extends ServiceImpl<UserMapper, User> {
         lambdaUpdate().set(User::getNickname, name)
                 .eq(User::getUid, uid)
                 .update();
+    }
+
+    public List<User> getFriendList(List<Long> uids) {
+        return lambdaQuery().in(User::getUid, uids).list();
     }
 }
 

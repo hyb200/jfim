@@ -3,9 +3,7 @@ package com.abin.chatserver.user.controller;
 import com.abin.chatserver.common.domain.vo.BaseResponse;
 import com.abin.chatserver.user.domain.entity.User;
 import com.abin.chatserver.user.domain.vo.req.*;
-import com.abin.chatserver.user.domain.vo.resp.CursorPageBaseResp;
-import com.abin.chatserver.user.domain.vo.resp.FriendCheckResp;
-import com.abin.chatserver.user.domain.vo.resp.UserInfoResp;
+import com.abin.chatserver.user.domain.vo.resp.*;
 import com.abin.chatserver.user.service.FriendService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -54,8 +52,23 @@ public class FriendController {
     }
 
     @GetMapping("/list")
+    @Operation(description = "分页获取好友列表")
     public BaseResponse<CursorPageBaseResp<UserInfoResp>> friendList(@Valid CursorPageBaseReq cursorPageBaseReq) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return BaseResponse.success(friendService.friendList(user.getUid(), cursorPageBaseReq));
+    }
+
+    @GetMapping("/request/list")
+    @Operation(description = "分页获取申请列表")
+    public BaseResponse<PageBaseResp<FriendRequestResp>> requestList(@Valid PageBaseReq req) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return BaseResponse.success(friendService.requestList(user.getUid(), req));
+    }
+
+    @GetMapping("/request/unread")
+    @Operation(description = "申请未读数")
+    public BaseResponse<RequestUnreadResp> unread() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return BaseResponse.success(friendService.unread(user.getUid()));
     }
 }
