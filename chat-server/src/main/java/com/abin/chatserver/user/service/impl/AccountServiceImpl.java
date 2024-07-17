@@ -1,6 +1,7 @@
 package com.abin.chatserver.user.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.abin.chatserver.common.annotation.RedissonLock;
 import com.abin.chatserver.common.domain.enums.ErrorEnum;
 import com.abin.chatserver.common.exception.BusinessException;
 import com.abin.chatserver.common.utils.JwtUtils;
@@ -9,6 +10,7 @@ import com.abin.chatserver.user.domain.entity.User;
 import com.abin.chatserver.user.domain.vo.req.LoginReq;
 import com.abin.chatserver.user.domain.vo.req.ModifyNameReq;
 import com.abin.chatserver.user.service.AccountService;
+import com.abin.chatserver.user.service.cache.UserCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +29,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserCache userCache;
 
     @Override
     public void register(String username, String password, String confirmPassword) {
@@ -42,9 +46,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @RedissonLock(key = "#uid")
     public void modifyName(Long uid, ModifyNameReq req) {
         String name = req.getName();
         userDao.modifyName(uid, name);
+        userCache.userInfoChange(uid);
     }
 
     @Override
