@@ -1,6 +1,8 @@
 package com.abin.chatserver.user.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.abin.chatserver.chat.domain.entity.SessionSingle;
+import com.abin.chatserver.chat.service.SessionService;
 import com.abin.chatserver.common.annotation.RedissonLock;
 import com.abin.chatserver.common.exception.BusinessException;
 import com.abin.chatserver.user.dao.FriendRequestDao;
@@ -15,12 +17,14 @@ import com.abin.chatserver.user.domain.vo.req.*;
 import com.abin.chatserver.user.domain.vo.resp.*;
 import com.abin.chatserver.user.service.FriendService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -28,16 +32,16 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class FriendServiceImpl implements FriendService {
 
-    @Autowired
-    private UserFriendDao userFriendDao;
+    private final UserFriendDao userFriendDao;
 
-    @Autowired
-    private FriendRequestDao friendRequestDao;
+    private final FriendRequestDao friendRequestDao;
 
-    @Autowired
-    private UserDao userDao;
+    private final UserDao userDao;
+
+    private final SessionService sessionService;
 
     @Override
     public FriendCheckResp check(Long uid, FriendCheckReq friendCheckReq) {
@@ -110,6 +114,8 @@ public class FriendServiceImpl implements FriendService {
         //  创建好友关系
         createFriend(uid, friendRequest.getUid());
         //  todo 创建新会话，发送消息
+        SessionSingle sessionSingle = sessionService.newSingleSession(Arrays.asList(uid, friendRequest.getUid()));
+
     }
 
     @Override

@@ -3,8 +3,11 @@ package com.abin.chatserver.common.exception;
 import com.abin.chatserver.common.domain.enums.ErrorEnum;
 import com.abin.chatserver.common.domain.vo.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public BaseResponse<?> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
         System.out.println(e.getMessage());
@@ -21,6 +25,16 @@ public class GlobalExceptionHandler {
         e.getBindingResult().getFieldErrors().forEach(x -> errMsg.append(x.getDefaultMessage()).append(","));
         String message = errMsg.substring(0, errMsg.length() - 1);
         log.error("请求参数错误: {}", message);
+        return BaseResponse.error(ErrorEnum.PARAM_ERROR.getCode(), message);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = BindException.class)
+    public BaseResponse bindException(BindException e) {
+        StringBuilder errorMsg = new StringBuilder();
+        e.getBindingResult().getFieldErrors().forEach(x -> errorMsg.append(x.getField()).append(x.getDefaultMessage()).append(","));
+        String message = errorMsg.substring(0, errorMsg.length() - 1);
+        log.info("validation parameters error！The reason is:{}", message);
         return BaseResponse.error(ErrorEnum.PARAM_ERROR.getCode(), message);
     }
 

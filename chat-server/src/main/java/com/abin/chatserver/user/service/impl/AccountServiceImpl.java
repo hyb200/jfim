@@ -29,6 +29,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private UserCache userCache;
 

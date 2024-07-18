@@ -19,6 +19,16 @@ public class RedisKey {
      */
     public static final String USER_SUMMARY_STRING = "userSummary:uid_%d";
 
+    /**
+     * 会话详情
+     */
+    public static final String SESSION_INFO_STRING = "sessionInfo:sessionId_%d";
+
+    /**
+     * 群组详情
+     */
+    public static final String GROUP_INFO_STRING = "groupInfo:sessionId_%d";
+
     public static String getKey(String key, Object ... objects) {
         return BASE_KEY + String.format(key, objects);
     }
