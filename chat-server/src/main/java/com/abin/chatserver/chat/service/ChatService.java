@@ -2,6 +2,7 @@ package com.abin.chatserver.chat.service;
 
 import com.abin.chatserver.chat.domain.entity.Message;
 import com.abin.chatserver.chat.domain.vo.req.ChatMessageReq;
+import com.abin.chatserver.chat.domain.vo.req.RecallMsgReq;
 import com.abin.chatserver.chat.domain.vo.resp.ChatMessageResp;
 
 public interface ChatService {
@@ -23,4 +24,6 @@ public interface ChatService {
      * @return
      */
     ChatMessageResp getMsgResp(Long receiver, Message msg);
+
+    void recallMsg(Long uid, RecallMsgReq req);
 }

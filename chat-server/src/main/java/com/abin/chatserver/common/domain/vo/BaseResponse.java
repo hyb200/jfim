@@ -1,6 +1,8 @@
 package com.abin.chatserver.common.domain.vo;
 
 import com.abin.chatserver.common.domain.enums.ErrorEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseResponse<T> implements Serializable {
 
     /**

@@ -55,3 +55,6 @@ logging:
               %clr(:) %msg%n)"
 server:
   port: 9999
+
+rocketmq:
+  name-server: ${rocketmq.name-server}

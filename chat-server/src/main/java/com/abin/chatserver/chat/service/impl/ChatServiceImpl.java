@@ -2,18 +2,23 @@ package com.abin.chatserver.chat.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.abin.chatserver.chat.dao.GroupMemberDao;
 import com.abin.chatserver.chat.dao.MessageDao;
 import com.abin.chatserver.chat.dao.SessionSingleDao;
 import com.abin.chatserver.chat.domain.entity.*;
+import com.abin.chatserver.chat.domain.enums.MessageTypeEnum;
 import com.abin.chatserver.chat.domain.vo.req.ChatMessageReq;
+import com.abin.chatserver.chat.domain.vo.req.RecallMsgReq;
 import com.abin.chatserver.chat.domain.vo.resp.ChatMessageResp;
 import com.abin.chatserver.chat.service.ChatService;
 import com.abin.chatserver.chat.service.cache.SessionCache;
 import com.abin.chatserver.chat.service.cache.SessionGroupCache;
 import com.abin.chatserver.chat.service.strategy.msg.AbstractMsgHandler;
 import com.abin.chatserver.chat.service.strategy.msg.MsgHandlerFactory;
+import com.abin.chatserver.chat.service.strategy.msg.RecallMsgHandler;
 import com.abin.chatserver.common.domain.enums.CommonStatusEnum;
 import com.abin.chatserver.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +40,8 @@ public class ChatServiceImpl implements ChatService {
 
     private final MessageDao messageDao;
 
+    private final RecallMsgHandler recallMsgHandler;
+
     @Override
     public Long sendMsg(Long uid, ChatMessageReq req) {
         check(uid, req);
@@ -53,6 +60,28 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public ChatMessageResp getMsgResp(Long receiver, Message msg) {
         return CollUtil.getFirst(getMsgRespBatch(Collections.singletonList(msg), receiver));
+    }
+
+    @Override
+    public void recallMsg(Long uid, RecallMsgReq req) {
+        Message message = messageDao.getById(req.getMsgId());
+        recallCheck(uid, message);
+        recallMsgHandler.recall(uid, message);
+    }
+
+    private void recallCheck(Long uid, Message message) {
+        if (Objects.isNull(message) || message.getType().equals(MessageTypeEnum.RECALL.getType())) {
+            throw new BusinessException("消息撤回失败");
+        }
+
+        if (!uid.equals(message.getFromUid())) {
+            throw new BusinessException("抱歉，没有权限");
+        }
+
+        long between = DateUtil.between(message.getCreateTime(), new Date(), DateUnit.MINUTE);
+        if (between > 2) {
+            throw new BusinessException("消息超过2分钟无法撤回");
+        }
     }
 
     private List<ChatMessageResp> getMsgRespBatch(List<Message> messages, Long receiver) {

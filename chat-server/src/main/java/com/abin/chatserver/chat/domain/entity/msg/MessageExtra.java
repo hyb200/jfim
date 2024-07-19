@@ -38,7 +38,7 @@ public class MessageExtra implements Serializable {
     /**
      * 文件消息
      */
-    private FileMsgDTO fileMsg;
+    private FileMsgDTO fileMsgDTO;
 
     /**
      * 图片消息

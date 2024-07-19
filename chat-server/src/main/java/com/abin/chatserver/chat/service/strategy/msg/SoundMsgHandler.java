@@ -38,11 +38,11 @@ public class SoundMsgHandler extends AbstractMsgHandler<SoundMsgDTO> {
 
     @Override
     public Object showReplyMsg(Message msg) {
-        return null;
+        return "语音";
     }
 
     @Override
     public String showContactMsg(Message msg) {
-        return "";
+        return "[语音]";
     }
 }
