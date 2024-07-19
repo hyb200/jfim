@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -29,6 +30,14 @@ public class SecureInvokeService {
     private final SecureInvokeRecordDao secureInvokeRecordDao;
 
     private final Executor executor;
+
+    @Scheduled(cron = "*/5 * * * * ?")
+    public void retry() {
+        List<SecureInvokeRecord> waitRetryRecords = secureInvokeRecordDao.getWaitRetryRecords();
+        for (SecureInvokeRecord waitRetryRecord : waitRetryRecords) {
+            doAsyncInvoke(waitRetryRecord);
+        }
+    }
 
     public void invoke(SecureInvokeRecord record, boolean async) {
         boolean inTransaction = TransactionSynchronizationManager.isActualTransactionActive();
