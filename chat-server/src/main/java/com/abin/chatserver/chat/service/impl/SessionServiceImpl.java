@@ -44,6 +44,15 @@ public class SessionServiceImpl implements SessionService {
         return sessionSingle;
     }
 
+    @Override
+    public void banSingleSession(List<Long> uids) {
+        if (uids.size() != 2) {
+            throw new BusinessException("禁用会话失败，参数错误");
+        }
+        String key = generateSessionKey(uids);
+        sessionSingleDao.banSession(key);
+    }
+
     private SessionSingle createSingleSession(Long sessionId, List<Long> uids) {
         uids = uids.stream().sorted().toList();
         SessionSingle insert = SessionSingle.builder()

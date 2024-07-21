@@ -33,19 +33,20 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/info")
-    @Operation(description = "获取用户信息")
+    @Operation(summary = "获取用户信息")
     public BaseResponse<UserInfoResp> getUserInfo() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return BaseResponse.success(userService.getUserInfo(user.getUid()));
     }
 
     @PostMapping("/summary/info/batch")
-    @Operation(description = "返回需要刷新的信息")
+    @Operation(summary = "返回需要刷新的信息")
     public BaseResponse<List<SummaryInfoDTO>> getSummaryUserInfo(@Valid @RequestBody SummaryInfoReq req) {
         return BaseResponse.success(userService.getSummaryUserInfo(req));
     }
 
     @PostMapping("/login")
+    @Operation(summary = "用户登录")
     public BaseResponse<AuthenticateResp> login(@RequestBody @Valid LoginReq loginReq) {
         String token = accountService.authenticate(loginReq);
         AuthenticateResp resp = AuthenticateResp.builder()
@@ -55,6 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "用户注册")
     public BaseResponse<Void> register(@RequestBody @Valid RegisterReq registerReq) {
         String account = registerReq.getUsername();
         String password = registerReq.getPassword();
@@ -64,7 +66,7 @@ public class UserController {
     }
 
     @PutMapping("/name")
-    @Operation(description = "更改用户名")
+    @Operation(summary = "更改用户名")
     public BaseResponse<Void> modifyName(@Valid @RequestBody ModifyNameReq req) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         accountService.modifyName(user.getUid(), req);

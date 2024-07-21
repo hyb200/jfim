@@ -100,4 +100,21 @@ public class RedisUtils {
             return false;
         }
     }
+
+    /*------------------zSet相关操作--------------------------------*/
+
+    /**
+     * 添加元素,有序集合是按照元素的score值由小到大排列
+     */
+    public static Boolean zAdd(String key, String value, double score) {
+        return redisTemplate.opsForZSet().add(key, value, score);
+    }
+
+    public static Boolean zAdd(String key, Object value, double score) {
+        return zAdd(key, value.toString(), score);
+    }
+
+    public static Boolean zIsMember(String key, Object value) {
+        return Objects.nonNull(redisTemplate.opsForZSet().score(key, value.toString()));
+    }
 }

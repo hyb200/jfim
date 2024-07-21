@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.*;
 
 /**
@@ -23,6 +24,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Tag(name = "消息")
 public class Message implements Serializable {
     /**
      * id

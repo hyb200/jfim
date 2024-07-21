@@ -1,13 +1,16 @@
 package com.abin.chatserver.chat.service.strategy.msg;
 
 import com.abin.chatserver.chat.dao.MessageDao;
+import com.abin.chatserver.chat.domain.dto.ChatMsgRecallDTO;
 import com.abin.chatserver.chat.domain.entity.Message;
 import com.abin.chatserver.chat.domain.entity.msg.MessageExtra;
 import com.abin.chatserver.chat.domain.entity.msg.MsgRecall;
 import com.abin.chatserver.chat.domain.enums.MessageTypeEnum;
+import com.abin.chatserver.common.event.MessageRecallEvent;
 import com.abin.chatserver.user.domain.entity.User;
 import com.abin.chatserver.user.service.cache.UserCache;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -18,7 +21,10 @@ import java.util.Objects;
 public class RecallMsgHandler extends AbstractMsgHandler<Object> {
 
     private final UserCache userCache;
+
     private final MessageDao messageDao;
+
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     MessageTypeEnum getMessageTypeEnum() {
@@ -59,6 +65,6 @@ public class RecallMsgHandler extends AbstractMsgHandler<Object> {
                 .extra(extra)
                 .build();
         messageDao.updateById(update);
-        //  todo 消息撤回事件
+        applicationEventPublisher.publishEvent(new MessageRecallEvent(this, new ChatMsgRecallDTO(message.getId(), message.getSessionId(), uid)));
     }
 }

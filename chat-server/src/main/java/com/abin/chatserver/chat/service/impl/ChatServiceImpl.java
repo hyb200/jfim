@@ -5,11 +5,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.abin.chatserver.chat.dao.ContactDao;
 import com.abin.chatserver.chat.dao.GroupMemberDao;
 import com.abin.chatserver.chat.dao.MessageDao;
 import com.abin.chatserver.chat.dao.SessionSingleDao;
 import com.abin.chatserver.chat.domain.entity.*;
 import com.abin.chatserver.chat.domain.enums.MessageTypeEnum;
+import com.abin.chatserver.chat.domain.vo.req.ChatMessagePageReq;
 import com.abin.chatserver.chat.domain.vo.req.ChatMessageReq;
 import com.abin.chatserver.chat.domain.vo.req.RecallMsgReq;
 import com.abin.chatserver.chat.domain.vo.resp.ChatMessageResp;
@@ -20,9 +22,13 @@ import com.abin.chatserver.chat.service.strategy.msg.AbstractMsgHandler;
 import com.abin.chatserver.chat.service.strategy.msg.MsgHandlerFactory;
 import com.abin.chatserver.chat.service.strategy.msg.RecallMsgHandler;
 import com.abin.chatserver.common.domain.enums.CommonStatusEnum;
+import com.abin.chatserver.common.event.MessageSendEvent;
 import com.abin.chatserver.common.exception.BusinessException;
+import com.abin.chatserver.user.domain.vo.resp.CursorPageBaseResp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -42,24 +48,28 @@ public class ChatServiceImpl implements ChatService {
 
     private final RecallMsgHandler recallMsgHandler;
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+    private final ContactDao contactDao;
+
     @Override
+    @Transactional
     public Long sendMsg(Long uid, ChatMessageReq req) {
         check(uid, req);
         AbstractMsgHandler<?> handler = MsgHandlerFactory.getHandler(req.getMsgType());
         Long msgId = handler.checkAndSaveMsg(uid, req);
-        //  todo 发布消息发送事件
+
+        applicationEventPublisher.publishEvent(new MessageSendEvent(this, msgId));
         return msgId;
     }
 
     @Override
-    public ChatMessageResp getMsgResp(Long receiver, Long msgId) {
+    public ChatMessageResp getMsgResp(Long msgId) {
         Message msg = messageDao.getById(msgId);
-        return getMsgResp(receiver, msg);
+        return getMsgResp(msg);
     }
 
-    @Override
-    public ChatMessageResp getMsgResp(Long receiver, Message msg) {
-        return CollUtil.getFirst(getMsgRespBatch(Collections.singletonList(msg), receiver));
+    public ChatMessageResp getMsgResp(Message msg) {
+        return CollUtil.getFirst(getMsgRespBatch(Collections.singletonList(msg)));
     }
 
     @Override
@@ -67,6 +77,29 @@ public class ChatServiceImpl implements ChatService {
         Message message = messageDao.getById(req.getMsgId());
         recallCheck(uid, message);
         recallMsgHandler.recall(uid, message);
+    }
+
+    @Override
+    public CursorPageBaseResp<ChatMessageResp> getMsgPage(Long receiverUid, ChatMessagePageReq req) {
+        Long lastMsgId = getLastMsgId(req.getSessionId(), receiverUid);
+        CursorPageBaseResp<Message> cursorPage = messageDao.getCursorPage(req.getSessionId(), req, lastMsgId);
+        if (cursorPage.isEmpty()) {
+            return CursorPageBaseResp.empty();
+        }
+        return CursorPageBaseResp.init(cursorPage, getMsgRespBatch(cursorPage.getList()));
+    }
+
+    private Long getLastMsgId(Long sessionId, Long receiverUid) {
+        Session session = sessionCache.get(sessionId);
+        if (Objects.isNull(session)) {
+            throw new BusinessException("会话id有误");
+        }
+        if (session.isHotSession()) return null;
+        if (Objects.isNull(receiverUid)) {
+            throw new BusinessException("请先登录");
+        }
+        Contact contact = contactDao.get(receiverUid, sessionId);
+        return contact.getLastMsgId();
     }
 
     private void recallCheck(Long uid, Message message) {
@@ -84,7 +117,7 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
-    private List<ChatMessageResp> getMsgRespBatch(List<Message> messages, Long receiver) {
+    private List<ChatMessageResp> getMsgRespBatch(List<Message> messages) {
         if (CollUtil.isEmpty(messages)) {
             return new ArrayList<>();
         }

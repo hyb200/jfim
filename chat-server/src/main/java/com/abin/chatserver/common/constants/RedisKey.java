@@ -29,6 +29,11 @@ public class RedisKey {
      */
     public static final String GROUP_INFO_STRING = "groupInfo:sessionId_%d";
 
+    /**
+     * 热门房间列表
+     */
+    public static final String HOT_SESSION_ZSET = "hotSession";
+
     public static String getKey(String key, Object ... objects) {
         return BASE_KEY + String.format(key, objects);
     }

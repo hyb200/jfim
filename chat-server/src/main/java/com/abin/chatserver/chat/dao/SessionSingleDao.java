@@ -27,6 +27,12 @@ public class SessionSingleDao extends ServiceImpl<SessionSingleMapper, SessionSi
                 .set(SessionSingle::getStatus, CommonStatusEnum.NORMAL.getStatus())
                 .update();
     }
+
+    public void banSession(String key) {
+        lambdaUpdate().eq(SessionSingle::getSessionKey, key)
+                .set(SessionSingle::getStatus, CommonStatusEnum.NOT_NORMAL.getStatus())
+                .update();
+    }
 }
 
 

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WSFriendApply {
+public class WSFriendRequest {
 
     @Schema(name = "申请人")
     private Long uid;

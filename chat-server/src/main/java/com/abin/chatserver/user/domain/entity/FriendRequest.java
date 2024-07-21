@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +19,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @TableName("friend_request")
-@Schema(name = "FriendRequest对象", description = "好友申请表")
+@Tag(name = "FriendRequest对象", description = "好友申请表")
 public class FriendRequest implements Serializable {
 
     @Schema(description = "id")

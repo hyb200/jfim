@@ -35,6 +35,11 @@ public class NettyWebSocketServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+        userOffline(ctx);
+    }
+
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.error("WebSocket Service Error: {}", cause.getMessage());
         ctx.channel().close();

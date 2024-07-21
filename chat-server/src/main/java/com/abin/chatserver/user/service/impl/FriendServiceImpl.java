@@ -2,8 +2,13 @@ package com.abin.chatserver.user.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.abin.chatserver.chat.domain.entity.SessionSingle;
+import com.abin.chatserver.chat.domain.enums.MessageTypeEnum;
+import com.abin.chatserver.chat.domain.vo.req.ChatMessageReq;
+import com.abin.chatserver.chat.domain.vo.req.TextMsgReq;
+import com.abin.chatserver.chat.service.ChatService;
 import com.abin.chatserver.chat.service.SessionService;
 import com.abin.chatserver.common.annotation.RedissonLock;
+import com.abin.chatserver.common.event.FriendRequestEvent;
 import com.abin.chatserver.common.exception.BusinessException;
 import com.abin.chatserver.user.dao.FriendRequestDao;
 import com.abin.chatserver.user.dao.UserDao;
@@ -20,7 +25,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +47,10 @@ public class FriendServiceImpl implements FriendService {
     private final UserDao userDao;
 
     private final SessionService sessionService;
+
+    private final ApplicationEventPublisher applicationEventPublisher;
+
+    private final ChatService chatService;
 
     @Override
     public FriendCheckResp check(Long uid, FriendCheckReq friendCheckReq) {
@@ -95,7 +104,7 @@ public class FriendServiceImpl implements FriendService {
                 .readStatus(ReadStatusEnum.UNREAD.getCode())
                 .build();
         friendRequestDao.save(insert);
-        //  todo 发布申请事件
+        applicationEventPublisher.publishEvent(new FriendRequestEvent(this, insert));
     }
 
     @Override
@@ -113,9 +122,14 @@ public class FriendServiceImpl implements FriendService {
         friendRequestDao.agree(applyId);
         //  创建好友关系
         createFriend(uid, friendRequest.getUid());
-        //  todo 创建新会话，发送消息
+
         SessionSingle sessionSingle = sessionService.newSingleSession(Arrays.asList(uid, friendRequest.getUid()));
 
+        ChatMessageReq chatMessageReq = new ChatMessageReq();
+        chatMessageReq.setSessionId(sessionSingle.getSessionId());
+        chatMessageReq.setMsgType(MessageTypeEnum.TEXT.getType());
+        chatMessageReq.setBody(TextMsgReq.builder().content("我们已经成为好友了，开始聊天吧").build());
+        chatService.sendMsg(uid, chatMessageReq);
     }
 
     @Override
@@ -128,7 +142,7 @@ public class FriendServiceImpl implements FriendService {
         }
         List<Long> relationIds = relations.stream().map(UserFriend::getId).toList();
         userFriendDao.removeByIds(relationIds);
-        //  todo 禁用会话
+        sessionService.banSingleSession(Arrays.asList(uid, targetUid));
     }
 
     @Override

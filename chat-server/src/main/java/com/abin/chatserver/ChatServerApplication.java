@@ -8,7 +8,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.abin")
 @MapperScan("com.abin.**.mapper")
 @EnableRedisSerialize
 public class ChatServerApplication {

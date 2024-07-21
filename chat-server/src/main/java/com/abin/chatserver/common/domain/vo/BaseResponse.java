@@ -15,7 +15,6 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseResponse<T> implements Serializable {
 
     /**

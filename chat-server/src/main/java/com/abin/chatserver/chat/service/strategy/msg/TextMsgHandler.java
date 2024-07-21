@@ -27,10 +27,15 @@ import java.util.*;
 public class TextMsgHandler extends AbstractMsgHandler<TextMsgReq> {
 
     private final MessageDao messageDao;
+
     private final UserInfoCache userInfoCache;
+
     private final SessionDao sessionDao;
+
     private final GroupMemberDao groupMemberDao;
+
     private final MsgCache msgCache;
+
     private final UserCache userCache;
 
     @Override
@@ -86,7 +91,6 @@ public class TextMsgHandler extends AbstractMsgHandler<TextMsgReq> {
         if (CollUtil.isNotEmpty(body.getAtUidList())) {
             extra.setAtUidList(body.getAtUidList());
         }
-
         messageDao.updateById(update);
     }
 

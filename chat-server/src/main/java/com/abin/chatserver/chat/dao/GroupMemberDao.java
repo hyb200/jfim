@@ -6,6 +6,7 @@ import com.abin.chatserver.chat.domain.entity.GroupMember;
 import com.abin.chatserver.chat.mapper.GroupMemberMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -28,6 +29,13 @@ public class GroupMemberDao extends ServiceImpl<GroupMemberMapper, GroupMember> 
                 .eq(GroupMember::getRole, GroupRoleEnum.MANAGER.getType())
                 .one();
         return Objects.nonNull(member);
+    }
+
+    public List<Long> getMemberUids(Long groupId) {
+        List<GroupMember> groupMembers = lambdaQuery().eq(GroupMember::getGroupId, groupId)
+                .select(GroupMember::getUid)
+                .list();
+        return groupMembers.stream().map(GroupMember::getUid).toList();
     }
 }
 

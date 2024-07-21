@@ -40,8 +40,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Throwable.class)
     public BaseResponse<?> defaultExceptionHandler(Throwable e) {
-        log.error("系统错误: {}", e);
-        return BaseResponse.error(ErrorEnum.SYSTEM_ERROR);
+        log.error("系统错误: {}", e.getMessage());
+        return BaseResponse.error(ErrorEnum.SYSTEM_ERROR.getCode(), e.getMessage());
     }
 
     @ExceptionHandler(value = BusinessException.class)

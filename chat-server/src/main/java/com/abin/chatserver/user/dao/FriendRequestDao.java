@@ -37,7 +37,8 @@ public class FriendRequestDao extends ServiceImpl<FriendRequestMapper, FriendReq
     }
 
     public Integer getUnreadCount(Long uid) {
-        return Math.toIntExact(lambdaQuery().eq(FriendRequest::getTargetId, uid)
+        return Math.toIntExact(lambdaQuery()
+                .eq(FriendRequest::getTargetId, uid)
                 .eq(FriendRequest::getReadStatus, ReadStatusEnum.UNREAD.getCode())
                 .count());
     }

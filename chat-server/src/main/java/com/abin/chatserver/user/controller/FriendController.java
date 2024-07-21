@@ -21,14 +21,14 @@ public class FriendController {
     private FriendService friendService;
 
     @PostMapping("/check")
-    @Operation(description = "查询是否是好友")
+    @Operation(summary = "查询是否是好友")
     public BaseResponse<FriendCheckResp> check(@Valid @RequestBody FriendCheckReq friendCheckReq) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return BaseResponse.success(friendService.check(user.getUid(), friendCheckReq));
     }
 
     @PostMapping("/request")
-    @Operation(description = "提交好友申请")
+    @Operation(summary = "提交好友申请")
     public BaseResponse<Void> request(@Valid @RequestBody FriendRequestReq req) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         friendService.doFriendRequest(user.getUid(), req);
@@ -36,7 +36,7 @@ public class FriendController {
     }
 
     @PutMapping("/agree")
-    @Operation(description = "同意申请")
+    @Operation(summary = "同意申请")
     public BaseResponse<Void> agreeRequest(@Valid @RequestBody AgreeRequestReq req) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         friendService.agreeRequest(user.getUid(), req);
@@ -44,7 +44,7 @@ public class FriendController {
     }
 
     @DeleteMapping
-    @Operation(description = "删除好友")
+    @Operation(summary = "删除好友")
     public BaseResponse<Void> deleteFriend(@Valid @RequestBody FriendDeleteReq req) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         friendService.deleteFriend(user.getUid(), req.getTargetUid());
@@ -52,21 +52,21 @@ public class FriendController {
     }
 
     @GetMapping("/list")
-    @Operation(description = "分页获取好友列表")
+    @Operation(summary = "分页获取好友列表")
     public BaseResponse<CursorPageBaseResp<UserInfoResp>> friendList(@Valid CursorPageBaseReq cursorPageBaseReq) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return BaseResponse.success(friendService.friendList(user.getUid(), cursorPageBaseReq));
     }
 
     @GetMapping("/request/list")
-    @Operation(description = "分页获取申请列表")
+    @Operation(summary = "分页获取申请列表")
     public BaseResponse<PageBaseResp<FriendRequestResp>> requestList(@Valid PageBaseReq req) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return BaseResponse.success(friendService.requestList(user.getUid(), req));
     }
 
     @GetMapping("/request/unread")
-    @Operation(description = "申请未读数")
+    @Operation(summary = "申请未读数")
     public BaseResponse<RequestUnreadResp> unread() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return BaseResponse.success(friendService.unread(user.getUid()));
