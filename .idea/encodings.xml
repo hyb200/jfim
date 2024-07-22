@@ -2,6 +2,8 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/chat-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/chat-tools/chat-oss-starter/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/chat-tools/chat-oss-starter/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/chat-tools/chat-transaction/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/chat-tools/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/chat-tools/src/main/resources" charset="UTF-8" />

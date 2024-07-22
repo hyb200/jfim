@@ -68,14 +68,13 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="Contact" />
-                  <option name="tableName" value="contact" />
+                  <option name="className" value="UserEmoji" />
+                  <option name="tableName" value="user_emoji" />
                 </TableUIInfo>
               </list>
             </option>
             <option name="templatesName" value="mybatis-plus3" />
             <option name="useActualColumnAnnotationInject" value="true" />
-            <option name="useActualColumns" value="true" />
             <option name="useLombokPlugin" value="true" />
           </GenerateConfig>
         </option>

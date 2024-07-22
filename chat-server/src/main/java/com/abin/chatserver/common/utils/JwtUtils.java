@@ -36,7 +36,7 @@ public class JwtUtils {
         return JWT.create()
                 .withClaim(UID_CLAIM, uid)
                 .withIssuedAt(new Date(System.currentTimeMillis()))
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 1))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
                 .sign(ALGORITHM);
     }
 
