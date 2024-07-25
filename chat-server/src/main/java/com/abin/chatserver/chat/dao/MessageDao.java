@@ -12,6 +12,7 @@ import com.abin.chatserver.chat.domain.entity.Message;
 import com.abin.chatserver.chat.mapper.MessageMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -48,6 +49,19 @@ public class MessageDao extends ServiceImpl<MessageMapper, Message> {
                 .orElse(null);
         boolean isLast = page.getRecords().size() != req.getPageSize();
         return new CursorPageBaseResp<>(cursor, isLast, page.getRecords());
+    }
+
+    public Integer getUnreadCount(Long sessionId, Date readTime) {
+        return Math.toIntExact(lambdaQuery()
+                .eq(Message::getSessionId, sessionId)
+                .gt(Objects.nonNull(readTime), Message::getCreateTime, readTime)
+                .count());
+    }
+
+    public void removeBySessionId(Long sessionId) {
+        lambdaUpdate().eq(Message::getSessionId, sessionId)
+                .set(Message::getStatus, MessageStatusEnum.DELETE.getStatus())
+                .update();
     }
 }
 

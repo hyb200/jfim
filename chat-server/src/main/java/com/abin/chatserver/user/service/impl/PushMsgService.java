@@ -2,8 +2,7 @@ package com.abin.chatserver.user.service.impl;
 
 import com.abin.chatserver.common.constants.MQConstant;
 import com.abin.chatserver.common.domain.dto.PushMessageDTO;
-import com.abin.chatserver.user.domain.vo.req.WSBaseReq;
-import com.abin.chatserver.user.domain.vo.resp.WSBaseResp;
+import com.abin.chatserver.common.domain.vo.response.WSBaseResp;
 import com.abin.transaction.service.MQProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

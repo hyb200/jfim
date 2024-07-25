@@ -6,6 +6,8 @@ import com.abin.chatserver.chat.domain.entity.SessionSingle;
 import com.abin.chatserver.chat.mapper.SessionSingleMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
 * @author Yibin Huang
 * @description 针对表【session_single(单聊表)】的数据库操作
@@ -32,6 +34,10 @@ public class SessionSingleDao extends ServiceImpl<SessionSingleMapper, SessionSi
         lambdaUpdate().eq(SessionSingle::getSessionKey, key)
                 .set(SessionSingle::getStatus, CommonStatusEnum.NOT_NORMAL.getStatus())
                 .update();
+    }
+
+    public List<SessionSingle> listBySessionIds(List<Long> sessionIds) {
+        return lambdaQuery().in(SessionSingle::getSessionId, sessionIds).list();
     }
 }
 

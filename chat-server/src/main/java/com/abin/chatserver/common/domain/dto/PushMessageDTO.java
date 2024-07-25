@@ -1,7 +1,7 @@
 package com.abin.chatserver.common.domain.dto;
 
 import com.abin.chatserver.common.domain.enums.WSPushTypeEnum;
-import com.abin.chatserver.user.domain.vo.resp.WSBaseResp;
+import com.abin.chatserver.common.domain.vo.response.WSBaseResp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

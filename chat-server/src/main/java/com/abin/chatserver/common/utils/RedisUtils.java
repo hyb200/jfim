@@ -3,7 +3,7 @@ package com.abin.chatserver.common.utils;
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.core.parameters.P;
+import org.springframework.data.redis.core.ZSetOperations;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -116,5 +116,15 @@ public class RedisUtils {
 
     public static Boolean zIsMember(String key, Object value) {
         return Objects.nonNull(redisTemplate.opsForZSet().score(key, value.toString()));
+    }
+
+    public static Set<ZSetOperations.TypedTuple<String>> zRangeByScoreWithScores(String key, Double st, Double ed) {
+        if (Objects.isNull(st)) {
+            st = Double.MIN_VALUE;
+        }
+        if (Objects.isNull(ed)) {
+            ed = Double.MAX_VALUE;
+        }
+        return redisTemplate.opsForZSet().rangeByScoreWithScores(key, st, ed);
     }
 }

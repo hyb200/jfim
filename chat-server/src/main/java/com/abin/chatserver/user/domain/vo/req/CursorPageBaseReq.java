@@ -19,7 +19,7 @@ public class CursorPageBaseReq {
     @Schema(description = "页面大小")
     @Min(0)
     @Max(100)
-    private Integer pageSize = 50;
+    private Integer pageSize = 10;
 
     @Schema(description = "游标（初始为null，后续请求附带上次翻页的游标）")
     private String cursor;

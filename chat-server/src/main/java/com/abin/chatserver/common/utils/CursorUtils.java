@@ -7,7 +7,7 @@ import java.util.Date;
  */
 public class CursorUtils {
 
-    private static String toCursor(Object o) {
+    public static String toCursor(Object o) {
         if (o instanceof Date) {
             return String.valueOf(((Date) o).getTime());
         } else {
@@ -15,7 +15,7 @@ public class CursorUtils {
         }
     }
 
-    private static Object parserCursor(String cursor, Class<?> cursorClass) {
+    public static Object parserCursor(String cursor, Class<?> cursorClass) {
         if (Date.class.isAssignableFrom(cursorClass)) {
             return new Date(Long.parseLong(cursor));
         } else {

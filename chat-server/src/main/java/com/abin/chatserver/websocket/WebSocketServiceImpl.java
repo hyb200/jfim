@@ -1,9 +1,9 @@
 package com.abin.chatserver.websocket;
 
 import com.abin.chatserver.common.config.ThreadPoolConfig;
+import com.abin.chatserver.common.domain.vo.response.WSBaseResp;
 import com.abin.chatserver.common.utils.JsonUtils;
 import com.abin.chatserver.user.domain.dto.WSChannelExtraDTO;
-import com.abin.chatserver.user.domain.vo.resp.WSBaseResp;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;

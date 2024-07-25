@@ -21,7 +21,7 @@ public class GroupMemberCache {
     @Cacheable(cacheNames = "member", key = "'groupMember'+#sessionId")
     public List<Long> getMemberUids(Long sessionId) {
         SessionGroup sessionGroup = sessionGroupDao.getBySessionId(sessionId);
-        if (Objects.nonNull(sessionGroup)) {
+        if (Objects.isNull(sessionGroup)) {
             return null;
         }
         return groupMemberDao.getMemberUids(sessionGroup.getId());

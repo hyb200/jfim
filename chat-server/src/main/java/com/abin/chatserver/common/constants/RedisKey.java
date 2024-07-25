@@ -30,6 +30,11 @@ public class RedisKey {
     public static final String GROUP_INFO_STRING = "groupInfo:sessionId_%d";
 
     /**
+     * 单聊详情
+     */
+    public static final String SINGLE_INFO_STRING = "groupSingle:sessionId_%d";
+
+    /**
      * 热门房间列表
      */
     public static final String HOT_SESSION_ZSET = "hotSession";

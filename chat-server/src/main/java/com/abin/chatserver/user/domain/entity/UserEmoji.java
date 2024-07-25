@@ -42,9 +42,9 @@ public class UserEmoji implements Serializable {
     /**
      * 逻辑删除(0-正常,1-删除)
      */
-    @TableField(value = "delete_status")
+    @TableField(value = "deleted")
     @TableLogic
-    private Integer deleteStatus;
+    private Integer deleted;
 
     /**
      * 创建时间

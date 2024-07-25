@@ -12,7 +12,7 @@ import com.abin.chatserver.chat.service.cache.SessionCache;
 import com.abin.chatserver.common.constants.MQConstant;
 import com.abin.chatserver.common.domain.dto.MsgSendMessageDTO;
 import com.abin.chatserver.common.domain.enums.WSResqTypeEnum;
-import com.abin.chatserver.user.domain.vo.resp.WSBaseResp;
+import com.abin.chatserver.common.domain.vo.response.WSBaseResp;
 import com.abin.chatserver.user.service.impl.PushMsgService;
 import lombok.RequiredArgsConstructor;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;

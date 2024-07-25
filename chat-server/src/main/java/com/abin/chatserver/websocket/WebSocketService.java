@@ -1,6 +1,6 @@
 package com.abin.chatserver.websocket;
 
-import com.abin.chatserver.user.domain.vo.resp.WSBaseResp;
+import com.abin.chatserver.common.domain.vo.response.WSBaseResp;
 import io.netty.channel.Channel;
 
 public interface WebSocketService {

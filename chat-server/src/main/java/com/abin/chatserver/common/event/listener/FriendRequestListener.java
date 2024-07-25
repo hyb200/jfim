@@ -1,11 +1,11 @@
 package com.abin.chatserver.common.event.listener;
 
 import com.abin.chatserver.common.domain.enums.WSResqTypeEnum;
+import com.abin.chatserver.common.domain.vo.response.WSBaseResp;
 import com.abin.chatserver.common.domain.vo.response.WSFriendRequest;
 import com.abin.chatserver.common.event.FriendRequestEvent;
 import com.abin.chatserver.user.dao.FriendRequestDao;
 import com.abin.chatserver.user.domain.entity.FriendRequest;
-import com.abin.chatserver.user.domain.vo.resp.WSBaseResp;
 import com.abin.chatserver.user.service.impl.PushMsgService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

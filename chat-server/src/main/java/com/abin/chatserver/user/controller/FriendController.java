@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/capi/user/friend")
-@Tag(name = "好友模块相关接口")
+@Tag(name = "好友模块接口")
 public class FriendController {
 
     @Autowired

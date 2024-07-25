@@ -44,7 +44,7 @@ public class SessionGroup implements Serializable {
      * 逻辑删除(0-正常,1-删除)
      */
     @TableLogic
-    private Integer deleteStatus;
+    private Integer deleted;
 
     /**
      * 创建时间

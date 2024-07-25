@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/capi/chat")
-@Tag(name = "聊天相关接口")
+@Tag(name = "聊天模块接口")
 @Slf4j
 @RequiredArgsConstructor
 public class ChatController {
