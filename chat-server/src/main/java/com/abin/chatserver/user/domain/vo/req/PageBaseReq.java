@@ -3,10 +3,14 @@ package com.abin.chatserver.user.domain.vo.req;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Schema(description = "基础翻页请求")
+@NoArgsConstructor
+@AllArgsConstructor
 public class PageBaseReq {
 
     @Schema(description = "当前索引")

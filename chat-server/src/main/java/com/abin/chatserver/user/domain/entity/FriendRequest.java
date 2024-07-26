@@ -7,9 +7,7 @@ import java.util.Date;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
@@ -17,6 +15,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @TableName("friend_request")
 @Tag(name = "FriendRequest对象", description = "好友申请表")

@@ -8,7 +8,10 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 会话列表
@@ -16,6 +19,8 @@ import lombok.Data;
  */
 @TableName(value ="contact")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Contact implements Serializable {
     /**
      * id

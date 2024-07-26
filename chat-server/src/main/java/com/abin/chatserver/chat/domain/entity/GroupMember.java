@@ -8,7 +8,10 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 群成员表
@@ -16,6 +19,8 @@ import lombok.Data;
  */
 @TableName(value ="group_member")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class GroupMember implements Serializable {
     /**
      * id

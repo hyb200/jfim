@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.annotation.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 群聊表
@@ -13,6 +16,8 @@ import lombok.Data;
  */
 @TableName(value ="session_group")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SessionGroup implements Serializable {
     /**
      * id
