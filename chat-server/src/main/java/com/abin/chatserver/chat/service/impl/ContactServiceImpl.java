@@ -125,7 +125,7 @@ public class ContactServiceImpl implements ContactService {
     private Map<Long, Integer> getUnreadMap(Long uid, List<Long> sessionIds) {
         if (Objects.isNull(uid)) return new HashMap<>();
 
-        List<Contact> contacts = contactDao.getBySessionIds(sessionIds);
+        List<Contact> contacts = contactDao.getBySessionIds(sessionIds, uid);
         return contacts.parallelStream()
                 .map(contact -> Pair.of(contact.getSessionId(), messageDao.getUnreadCount(contact.getSessionId(), contact.getReadTime())))
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue));

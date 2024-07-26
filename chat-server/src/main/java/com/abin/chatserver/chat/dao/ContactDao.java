@@ -59,8 +59,11 @@ public class ContactDao extends ServiceImpl<ContactMapper, Contact> {
         return new CursorPageBaseResp<>(cursor, isLast, page.getRecords());
     }
 
-    public List<Contact> getBySessionIds(List<Long> sessionIds) {
-        return lambdaQuery().in(Contact::getSessionId, sessionIds).list();
+    public List<Contact> getBySessionIds(List<Long> sessionIds, Long uid) {
+        return lambdaQuery()
+                .in(Contact::getSessionId, sessionIds)
+                .eq(Contact::getUid, uid)
+                .list();
     }
 
     /**
