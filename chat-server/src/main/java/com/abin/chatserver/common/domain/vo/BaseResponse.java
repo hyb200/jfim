@@ -3,6 +3,8 @@ package com.abin.chatserver.common.domain.vo;
 import com.abin.chatserver.common.domain.enums.ErrorEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +16,7 @@ import java.io.Serializable;
  * @param <T>
  */
 @Data
+@Builder
 @NoArgsConstructor
 public class BaseResponse<T> implements Serializable {
 

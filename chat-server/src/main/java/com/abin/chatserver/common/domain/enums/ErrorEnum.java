@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 public enum ErrorEnum {
     PARAM_ERROR(40001, "请求参数错误"),
+    TOKEN_EXPIRE_ERROR(40002, "Token过期"),
     SYSTEM_ERROR(50001, "系统内部错误"),
     BUSINESS_ERROR(50002, "{}"),
     LOCK_ERROR(50003, "获取分布式锁失败");

@@ -29,6 +29,7 @@ public class JwtUtils {
 
     /**
      * 生成 token，默认有效期为 1 天
+     *
      * @param uid
      * @return
      */
@@ -40,19 +41,15 @@ public class JwtUtils {
                 .sign(ALGORITHM);
     }
 
-    private static Map<String, Claim> extractAllClaims(@NonNull String token) {
-        try {
-            JWTVerifier verifier = JWT.require(ALGORITHM).build();
-            DecodedJWT jwt = verifier.verify(token);
-            return jwt.getClaims();
-        } catch (TokenExpiredException e) {
-            log.error("Decode error. {}", e.getMessage());
-        }
-        return null;
+    private static Map<String, Claim> extractAllClaims(@NonNull String token) throws TokenExpiredException {
+        JWTVerifier verifier = JWT.require(ALGORITHM).build();
+        DecodedJWT jwt = verifier.verify(token);
+        return jwt.getClaims();
     }
 
     /**
      * 获取uid
+     *
      * @param token
      * @return
      */
@@ -65,10 +62,12 @@ public class JwtUtils {
     }
 
 
-    public static void main(String[] args) {
-        long a = 10000L;
-        String token = generateToken(a);
-        System.out.println(extractAllClaims(token));
-        System.out.println(extractUidOrNull(token));
-    }
+//    public static void main(String[] args) {
+//        long a = 10000L;
+//        String token = generateToken(a);
+//        System.out.println(token);
+
+//        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjEwMDAwLCJleHAiOjE3MjIwNTMxNzgsImlhdCI6MTcyMjA1MzE3N30.n6kOiOlS09xA-8V5P6TyGu_-_avKQZysY0vw9N5r2bU";
+//        System.out.println(extractUidOrNull(token));
+//    }
 }
