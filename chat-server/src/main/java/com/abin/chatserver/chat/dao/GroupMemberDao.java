@@ -62,6 +62,15 @@ public class GroupMemberDao extends ServiceImpl<GroupMemberMapper, GroupMember> 
                 .in(GroupMember::getUid, uids);
         return remove(wrapper);
     }
+
+    public List<Long> getMemberBatch(Long sessionId, List<Long> uids) {
+        List<GroupMember> groupMembers = lambdaQuery()
+                .eq(GroupMember::getGroupId, sessionId)
+                .in(GroupMember::getUid, uids)
+                .select(GroupMember::getUid)
+                .list();
+        return groupMembers.stream().map(GroupMember::getUid).toList();
+    }
 }
 
 

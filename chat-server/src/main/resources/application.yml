@@ -4,7 +4,7 @@ spring:
   profiles:
     active: test
   datasource:
-    url: jdbc:mysql://${jfim.mysql.ip}:${jfim.mysql.port}/${jfim.mysql.db}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://${jfim.mysql.ip}:${jfim.mysql.port}/${jfim.mysql.db}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: ${jfim.mysql.username}
     password: ${jfim.mysql.password}
   data:

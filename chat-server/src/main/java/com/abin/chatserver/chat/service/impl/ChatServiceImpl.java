@@ -49,6 +49,7 @@ public class ChatServiceImpl implements ChatService {
     private final RecallMsgHandler recallMsgHandler;
 
     private final ApplicationEventPublisher applicationEventPublisher;
+
     private final ContactDao contactDao;
 
     @Override

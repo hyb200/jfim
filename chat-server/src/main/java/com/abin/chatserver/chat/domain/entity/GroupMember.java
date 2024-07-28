@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
  */
 @TableName(value ="group_member")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupMember implements Serializable {

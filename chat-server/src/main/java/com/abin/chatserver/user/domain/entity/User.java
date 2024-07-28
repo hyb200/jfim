@@ -27,6 +27,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Schema(name = "User对象", description = "用户表")
 public class User implements Serializable, UserDetails {
 
+    public static Long SYSTEM_UID = 1L;
+
     @Schema(description = "用户ID")
     @TableId(type = IdType.AUTO)
     private Long uid;
