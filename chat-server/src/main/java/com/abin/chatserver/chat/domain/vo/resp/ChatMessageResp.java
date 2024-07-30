@@ -47,5 +47,4 @@ public class ChatMessageResp {
         @Schema(description = "消息内容")
         private Object body;
     }
-
 }

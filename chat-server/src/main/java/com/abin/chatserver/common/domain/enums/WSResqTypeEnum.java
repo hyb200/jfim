@@ -23,9 +23,6 @@ public enum WSResqTypeEnum {
 //    INVALIDATE_TOKEN(6, "使前端的token失效，意味着前端需要重新登录", null),
 //    BLACK(7, "拉黑用户", WSBlack.class),
 //    MARK(8, "消息标记", WSMsgMark.class),
-//
-
-//    MEMBER_CHANGE(11, "成员变动", WSMemberChange.class),
     ;
 
     private final Integer type;

@@ -6,6 +6,9 @@ import com.abin.chatserver.chat.domain.entity.Message;
 import com.abin.chatserver.chat.domain.entity.msg.MessageExtra;
 import com.abin.chatserver.chat.domain.entity.msg.MsgRecall;
 import com.abin.chatserver.chat.domain.enums.MessageTypeEnum;
+import com.abin.chatserver.chat.domain.vo.resp.ChatMessageResp;
+import com.abin.chatserver.chat.service.ChatService;
+import com.abin.chatserver.chat.service.impl.ChatServiceImpl;
 import com.abin.chatserver.common.event.MessageRecallEvent;
 import com.abin.chatserver.user.domain.entity.User;
 import com.abin.chatserver.user.service.cache.UserCache;
@@ -25,6 +28,8 @@ public class RecallMsgHandler extends AbstractMsgHandler<Object> {
     private final MessageDao messageDao;
 
     private final ApplicationEventPublisher applicationEventPublisher;
+
+    private final ChatService chatService;
 
     @Override
     MessageTypeEnum getMessageTypeEnum() {
@@ -65,6 +70,8 @@ public class RecallMsgHandler extends AbstractMsgHandler<Object> {
                 .extra(extra)
                 .build();
         messageDao.updateById(update);
-        applicationEventPublisher.publishEvent(new MessageRecallEvent(this, new ChatMsgRecallDTO(message.getId(), message.getSessionId(), uid)));
+        ChatMessageResp msgResp = chatService.getMsgResp(message.getId());
+//        applicationEventPublisher.publishEvent(new MessageRecallEvent(this, new ChatMsgRecallDTO(message.getId(), message.getSessionId(), uid)));
+        applicationEventPublisher.publishEvent(new MessageRecallEvent(this, msgResp));
     }
 }

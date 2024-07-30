@@ -1,11 +1,11 @@
 package com.abin.chatserver.common.event.listener;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.abin.chatserver.chat.domain.dto.ChatMsgRecallDTO;
+import com.abin.chatserver.chat.domain.vo.resp.ChatMessageResp;
 import com.abin.chatserver.chat.service.cache.MsgCache;
 import com.abin.chatserver.common.domain.enums.WSResqTypeEnum;
 import com.abin.chatserver.common.domain.vo.response.WSBaseResp;
-import com.abin.chatserver.common.domain.vo.response.WSMsgRecall;
+import com.abin.chatserver.common.domain.vo.response.WSMessage;
 import com.abin.chatserver.common.event.MessageRecallEvent;
 import com.abin.chatserver.user.service.impl.PushMsgService;
 import lombok.RequiredArgsConstructor;
@@ -26,18 +26,19 @@ public class MessageRecallListener {
     @Async
     @TransactionalEventListener(classes = MessageRecallEvent.class, fallbackExecution = true)
     public void evictMsg(MessageRecallEvent event) {
-        ChatMsgRecallDTO chatMsgRecallDTO = event.getChatMsgRecallDTO();
-        msgCache.evictMsg(chatMsgRecallDTO.getMsgId());
+        ChatMessageResp chatMsgRecallDTO = event.getChatMessageResp();
+        msgCache.evictMsg(chatMsgRecallDTO.getMessage().getId());
     }
 
     @Async
     @TransactionalEventListener(classes = MessageRecallEvent.class, fallbackExecution = true)
     public void sendToAll(MessageRecallEvent event) {
-        WSBaseResp<WSMsgRecall> wsBaseResp = new WSBaseResp<>();
+        WSBaseResp<WSMessage> wsBaseResp = new WSBaseResp<>();
         wsBaseResp.setType(WSResqTypeEnum.RECALL.getType());
-        WSMsgRecall wsMsgRecall = new WSMsgRecall();
-        BeanUtil.copyProperties(event.getChatMsgRecallDTO(), wsMsgRecall);
-        wsBaseResp.setData(wsMsgRecall);
+//        WSMsgRecall wsMsgRecall = new WSMsgRecall();
+        WSMessage wsMessage = new WSMessage();
+        BeanUtil.copyProperties(event.getChatMessageResp(), wsMessage);
+        wsBaseResp.setData(wsMessage);
         pushMsgService.sendPushMsg(wsBaseResp);
     }
 }
