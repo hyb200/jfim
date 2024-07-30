@@ -13,23 +13,29 @@ import com.abin.chatserver.common.event.MessageRecallEvent;
 import com.abin.chatserver.user.domain.entity.User;
 import com.abin.chatserver.user.service.cache.UserCache;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Objects;
 
 @Component
-@RequiredArgsConstructor
 public class RecallMsgHandler extends AbstractMsgHandler<Object> {
 
-    private final UserCache userCache;
+    @Autowired
+    private UserCache userCache;
 
-    private final MessageDao messageDao;
+    @Autowired
+    private MessageDao messageDao;
 
-    private final ApplicationEventPublisher applicationEventPublisher;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
-    private final ChatService chatService;
+    @Autowired
+    @Lazy
+    private ChatService chatService;
 
     @Override
     MessageTypeEnum getMessageTypeEnum() {
