@@ -159,7 +159,7 @@ public class ChatServiceImpl implements ChatService {
 
         if (session.isGroupSession()) {
             SessionGroup sessionGroup = sessionGroupCache.get(req.getSessionId());
-            GroupMember groupMember = groupMemberDao.getMember(sessionGroup.getSessionId(), uid);
+            GroupMember groupMember = groupMemberDao.getMember(sessionGroup.getId(), uid);
             if (Objects.isNull(groupMember)) {
                 throw new BusinessException("您已经被移除该群");
             }
