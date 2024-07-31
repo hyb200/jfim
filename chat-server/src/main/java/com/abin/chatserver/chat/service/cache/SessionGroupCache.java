@@ -30,7 +30,7 @@ public class SessionGroupCache extends AbstractRedisStringCache<Long, SessionGro
 
     @Override
     protected Map<Long, SessionGroup> load(List<Long> sessionIds) {
-        List<SessionGroup> sessionGroups = sessionGroupDao.listByIds(sessionIds);
+        List<SessionGroup> sessionGroups = sessionGroupDao.listBySessionIds(sessionIds);
         return sessionGroups.stream().collect(Collectors.toMap(SessionGroup::getSessionId, Function.identity()));
     }
 }

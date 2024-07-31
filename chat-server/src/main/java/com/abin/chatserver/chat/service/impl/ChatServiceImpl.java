@@ -24,6 +24,7 @@ import com.abin.chatserver.chat.service.strategy.msg.RecallMsgHandler;
 import com.abin.chatserver.common.domain.enums.CommonStatusEnum;
 import com.abin.chatserver.common.event.MessageSendEvent;
 import com.abin.chatserver.common.exception.BusinessException;
+import com.abin.chatserver.user.domain.entity.User;
 import com.abin.chatserver.user.domain.vo.resp.CursorPageBaseResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -146,6 +147,7 @@ public class ChatServiceImpl implements ChatService {
 
 
     private void check(Long uid, ChatMessageReq req) {
+        if (uid.equals(User.SYSTEM_UID)) return;
         Session session = sessionCache.get(req.getSessionId());
         if (session.isHotSession()) return;
 
