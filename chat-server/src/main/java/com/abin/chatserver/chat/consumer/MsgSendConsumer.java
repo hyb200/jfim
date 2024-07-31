@@ -7,6 +7,7 @@ import com.abin.chatserver.chat.domain.entity.SessionSingle;
 import com.abin.chatserver.chat.domain.enums.SessionTypeEnum;
 import com.abin.chatserver.chat.domain.vo.resp.ChatMessageResp;
 import com.abin.chatserver.chat.service.ChatService;
+import com.abin.chatserver.chat.service.cache.GroupMemberCache;
 import com.abin.chatserver.chat.service.cache.HotSessionCache;
 import com.abin.chatserver.chat.service.cache.SessionCache;
 import com.abin.chatserver.common.constants.MQConstant;
@@ -47,6 +48,8 @@ public class MsgSendConsumer implements RocketMQListener<MsgSendMessageDTO> {
 
     private final ContactDao contactDao;
 
+    private final GroupMemberCache groupMemberCache;
+
     @Override
     public void onMessage(MsgSendMessageDTO dto) {
         Message message = messageDao.getById(dto.getMsgId());
@@ -66,7 +69,7 @@ public class MsgSendConsumer implements RocketMQListener<MsgSendMessageDTO> {
         } else {
             List<Long> uids = new ArrayList<>();
             if (Objects.equals(session.getType(), SessionTypeEnum.GROUP.getType())) {
-                uids = groupMemberDao.getMemberUids(session.getId());
+                uids = groupMemberCache.getMemberUids(session.getId());
             } else if (Objects.equals(session.getType(), SessionTypeEnum.SINGLE.getType())) {
                 SessionSingle sessionSingle = sessionSingleDao.getBySessionId(session.getId());
                 uids = Arrays.asList(sessionSingle.getUid1(), sessionSingle.getUid2());

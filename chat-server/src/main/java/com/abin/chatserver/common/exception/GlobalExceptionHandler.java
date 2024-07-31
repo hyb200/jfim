@@ -2,7 +2,6 @@ package com.abin.chatserver.common.exception;
 
 import com.abin.chatserver.common.domain.enums.ErrorEnum;
 import com.abin.chatserver.common.domain.vo.BaseResponse;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;

@@ -18,6 +18,7 @@ import com.abin.chatserver.chat.service.strategy.msg.AbstractMsgHandler;
 import com.abin.chatserver.chat.service.strategy.msg.MsgHandlerFactory;
 import com.abin.chatserver.common.exception.BusinessException;
 import com.abin.chatserver.user.domain.dto.UserInfoDTO;
+import com.abin.chatserver.user.domain.entity.User;
 import com.abin.chatserver.user.domain.vo.req.CursorPageBaseReq;
 import com.abin.chatserver.user.domain.vo.resp.CursorPageBaseResp;
 import com.abin.chatserver.user.service.cache.UserInfoCache;
@@ -115,7 +116,8 @@ public class ContactServiceImpl implements ContactService {
                     Message message = msgMap.get(session.getLastMsgId());
                     if (Objects.nonNull(message)) {
                         AbstractMsgHandler<?> handler = MsgHandlerFactory.getHandler(message.getType());
-                        chatSessionResp.setText(lastMsgUids.get(message.getFromUid()).getNickname() + ":" + handler.showContactMsg(message));
+                        String text = message.getFromUid().equals(User.SYSTEM_UID) ? "" : lastMsgUids.get(message.getFromUid()).getNickname() + ":";
+                        chatSessionResp.setText(text + handler.showContactMsg(message));
                     }
                     return chatSessionResp;
 

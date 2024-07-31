@@ -166,7 +166,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public Long newGroup(Long owner, List<Long> uids) {
         UserInfoDTO user = userInfoCache.get(owner);
         Session session = createSession(SessionTypeEnum.GROUP);
@@ -194,7 +194,7 @@ public class SessionServiceImpl implements SessionService {
 
         groupMemberDao.saveBatch(members);
         applicationEventPublisher.publishEvent(new GroupMemberAddEvent(this, sessionGroup, members, owner));
-        return sessionGroup.getId();
+        return sessionGroup.getSessionId();
     }
 
     @Override
