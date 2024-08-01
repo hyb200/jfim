@@ -212,7 +212,7 @@ public class SessionServiceImpl implements SessionService {
         if (Objects.isNull(sessionGroup)) {
             throw new BusinessException("会话不存在");
         }
-        GroupMember member = groupMemberDao.getMember(sessionId, inviter);
+        GroupMember member = groupMemberDao.getMember(sessionGroup.getId(), inviter);
         if (Objects.isNull(member)) {
             throw new BusinessException("您不是群成员");
         }
