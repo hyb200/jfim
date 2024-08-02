@@ -2,10 +2,12 @@ package com.abin.chatserver.chat.service.impl;
 
 import com.abin.chatserver.chat.dao.*;
 import com.abin.chatserver.chat.domain.entity.GroupMember;
+import com.abin.chatserver.chat.domain.entity.Session;
 import com.abin.chatserver.chat.domain.entity.SessionGroup;
 import com.abin.chatserver.chat.domain.vo.req.MemberExitReq;
 import com.abin.chatserver.chat.service.GroupMemberService;
 import com.abin.chatserver.chat.service.cache.GroupMemberCache;
+import com.abin.chatserver.chat.service.cache.SessionCache;
 import com.abin.chatserver.common.domain.enums.WSResqTypeEnum;
 import com.abin.chatserver.common.domain.vo.response.WSBaseResp;
 import com.abin.chatserver.common.domain.vo.response.WSMemberChange;
@@ -14,6 +16,7 @@ import com.abin.chatserver.user.service.impl.PushMsgService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,8 +34,10 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     private final PushMsgService pushMsgService;
     private final SessionDao sessionDao;
     private final MessageDao messageDao;
+    private final SessionCache sessionCache;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void exitGroup(Long uid, MemberExitReq req) {
         Long sessionId = req.getSessionId();
         //  群聊是否存在
@@ -40,6 +45,12 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         if (Objects.isNull(sessionGroup)) {
             throw new BusinessException("群聊不存在");
         }
+
+        Session session = sessionDao.getById(sessionId);
+        if (session.isHotSession()) {
+            throw new BusinessException("全员聊天室无法退出");
+        }
+
         //  是否是群成员
         GroupMember member = groupMemberDao.getMember(sessionGroup.getId(), uid);
         if (Objects.isNull(member)) {
@@ -62,15 +73,15 @@ public class GroupMemberServiceImpl implements GroupMemberService {
                     .build();
             wsBaseResp.setData(memberChange);
             pushMsgService.sendPushMsg(wsBaseResp, memberUids);
-            groupMemberCache.evictMemberUids(sessionGroup.getId());
+            groupMemberCache.evictMemberUids(session.getId());
         } else {
             //  管理员退出直接解散群聊
             sessionDao.removeById(sessionId);
+            sessionCache.delete(sessionId);
             contactDao.removeBySessionId(sessionId, Collections.EMPTY_LIST);
             groupMemberDao.removeByGroupId(sessionGroup.getId(), Collections.EMPTY_LIST);
+            groupMemberCache.evictMemberUids(sessionId);
             messageDao.removeBySessionId(sessionId);
         }
-
-
     }
 }

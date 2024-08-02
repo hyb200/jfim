@@ -135,7 +135,8 @@ public class ContactServiceImpl implements ContactService {
 
     private Map<Long, SessionBaseInfo> getSessionBaseInfoMap(Long uid, List<Long> sessionIds) {
         Map<Long, Session> sessionMap = sessionCache.getBatch(sessionIds);
-        Map<Integer, List<Long>> groupTypeMap = sessionMap.values().stream().collect(Collectors.groupingBy(Session::getType,
+        Map<Integer, List<Long>> groupTypeMap = sessionMap.values().stream()
+                .collect(Collectors.groupingBy(Session::getType,
                 Collectors.mapping(Session::getId, Collectors.toList())));
         List<Long> groupSessionIds = groupTypeMap.get(SessionTypeEnum.GROUP.getType());
         Map<Long, SessionGroup> groupMap = sessionGroupCache.getBatch(groupSessionIds);

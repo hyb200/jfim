@@ -1,5 +1,6 @@
 package com.abin.chatserver.chat.dao;
 
+import cn.hutool.core.collection.CollUtil;
 import com.abin.chatserver.chat.domain.enums.GroupRoleEnum;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -54,12 +55,9 @@ public class GroupMemberDao extends ServiceImpl<GroupMemberMapper, GroupMember> 
      * @return 是否删除成功
      */
     public Boolean removeByGroupId(Long groupId, List<Long> uids) {
-        if (uids.isEmpty()) {
-            return false;
-        }
         LambdaQueryWrapper<GroupMember> wrapper = new QueryWrapper<GroupMember>().lambda()
                 .eq(GroupMember::getGroupId, groupId)
-                .in(GroupMember::getUid, uids);
+                .in(CollUtil.isNotEmpty(uids), GroupMember::getUid, uids);
         return remove(wrapper);
     }
 

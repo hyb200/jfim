@@ -74,12 +74,9 @@ public class ContactDao extends ServiceImpl<ContactMapper, Contact> {
      * @return 是否删除成功
      */
     public Boolean removeBySessionId(Long sessionId, List<Long> uids) {
-        if (uids.isEmpty()) {
-            return false;
-        }
         LambdaQueryWrapper<Contact> wrapper = new QueryWrapper<Contact>().lambda()
                 .eq(Contact::getSessionId, sessionId)
-                .in(Contact::getUid, uids);
+                .in(CollUtil.isNotEmpty(uids), Contact::getUid, uids);
         return remove(wrapper);
     }
 }
