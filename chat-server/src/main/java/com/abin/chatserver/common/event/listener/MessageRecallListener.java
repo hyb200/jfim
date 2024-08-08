@@ -35,7 +35,6 @@ public class MessageRecallListener {
     public void sendToAll(MessageRecallEvent event) {
         WSBaseResp<WSMessage> wsBaseResp = new WSBaseResp<>();
         wsBaseResp.setType(WSResqTypeEnum.RECALL.getType());
-//        WSMsgRecall wsMsgRecall = new WSMsgRecall();
         WSMessage wsMessage = new WSMessage();
         BeanUtil.copyProperties(event.getChatMessageResp(), wsMessage);
         wsBaseResp.setData(wsMessage);

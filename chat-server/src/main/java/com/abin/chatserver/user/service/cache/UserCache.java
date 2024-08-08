@@ -31,7 +31,7 @@ public class UserCache {
     /**
      * 批量获取用户信息，旁路缓存
      */
-    private Map<Long, User> getUserInfoBatch(Set<Long> uids) {
+    public Map<Long, User> getUserInfoBatch(Set<Long> uids) {
         List<String> keys = uids.stream()
                 .map(uid -> RedisKey.getKey(RedisKey.USER_INFO_STRING, uid)).toList();
 

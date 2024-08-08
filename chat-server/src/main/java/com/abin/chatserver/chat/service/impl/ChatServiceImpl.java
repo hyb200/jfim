@@ -26,12 +26,14 @@ import com.abin.chatserver.common.event.MessageSendEvent;
 import com.abin.chatserver.common.exception.BusinessException;
 import com.abin.chatserver.user.domain.entity.User;
 import com.abin.chatserver.user.domain.vo.resp.CursorPageBaseResp;
+import com.abin.chatserver.user.service.cache.UserCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +54,7 @@ public class ChatServiceImpl implements ChatService {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     private final ContactDao contactDao;
+    private final UserCache userCache;
 
     @Override
     @Transactional
@@ -120,13 +123,22 @@ public class ChatServiceImpl implements ChatService {
     }
 
     private List<ChatMessageResp> getMsgRespBatch(List<Message> messages) {
+        Set<Long> uids = messages.stream().map(Message::getFromUid).collect(Collectors.toSet());
+        Map<Long, User> userInfoMap = userCache.getUserInfoBatch(uids);
+
         if (CollUtil.isEmpty(messages)) {
             return new ArrayList<>();
         }
 
         return messages.stream()
                 .map(o -> {
-                    ChatMessageResp.UserInfo fromUser = ChatMessageResp.UserInfo.builder().uid(o.getFromUid()).build();
+                    User user = userInfoMap.get(o.getFromUid());
+
+                    ChatMessageResp.UserInfo fromUser = ChatMessageResp.UserInfo.builder()
+                            .uid(user.getUid())
+                            .avatar(user.getAvatar())
+                            .nickname(user.getNickname())
+                            .build();
 
                     ChatMessageResp.Message messageVO = new ChatMessageResp.Message();
                     BeanUtil.copyProperties(o, messageVO);

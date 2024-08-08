@@ -28,6 +28,12 @@ public class ChatMessageResp {
     public static class UserInfo {
         @Schema(description = "用户id")
         private Long uid;
+
+        @Schema(description = "用户昵称")
+        private String nickname;
+
+        @Schema(description = "用户头像")
+        private String avatar;
     }
 
     @Data
